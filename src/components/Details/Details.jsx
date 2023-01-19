@@ -1,7 +1,7 @@
 import React from 'react';
 import './Details.css';
 import {Card, CardHeader, CardContent, Typography } from '@mui/material';
-import { Doughnut } from 'react-chartjs-2';
+// import { Doughnut } from 'react-chartjs-2';
 
 
 const Details = ( { title } ) => {
