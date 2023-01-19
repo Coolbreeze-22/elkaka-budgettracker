@@ -1,23 +1,28 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
+import { Grid } from '@mui/material';
+
+import Details from './components/Details/Details';
+import Main from './components/Main/Main';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div> kaka
+      <Grid container spacing={0} gap={2} justifyContent="center" alignItems="center"  style={{ height: '100vh', width: '100vw'}} >
+        <Grid items xs={12} sm={4} >
+          <Details title="Income" />
+        </Grid>
+
+        <Grid items xs={12} sm={3.4}>
+          <Main />
+        </Grid>
+
+        <Grid items xs={12} sm={4}>
+          <Details title="Expense" />
+        </Grid>
+
+      </Grid>
     </div>
   );
 }
