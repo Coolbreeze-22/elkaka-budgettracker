@@ -1,10 +1,13 @@
 import React from "react";
+import './Main.css';
 import { Card, CardHeader, CardContent, Typography, Grid, Divider } from "@mui/material";
 import Form from "../Form/Form";
+import Lists from "../Lists/Lists";
 
 const Main = () => {
   return (
-    <Card className="root">
+    <div className="main">
+    <Card className="main">
       <CardHeader title="Expense Tracker" subheader="Powered by Speechly" />
       <CardContent>
         <Typography align="center" variant="h5">
@@ -21,11 +24,12 @@ const Main = () => {
       <CardContent className="cardContent">
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            {/* <List /> */}
+            <Lists />
           </Grid>
         </Grid>
       </CardContent>
     </Card>
+    </div>
   );
 };
 

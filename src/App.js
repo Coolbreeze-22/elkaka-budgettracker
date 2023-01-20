@@ -8,8 +8,8 @@ import Main from './components/Main/Main';
 
 function App() {
   return (
-    <div> kaka
-      <Grid container spacing={0} gap={2} justifyContent="center" alignItems="center"  style={{ height: '100vh', width: '100vw'}} >
+    <div>
+      <Grid container spacing={0} gap={1} justifyContent="center" alignItems="center" >
         <Grid items xs={12} sm={4} >
           <Details title="Income" />
         </Grid>

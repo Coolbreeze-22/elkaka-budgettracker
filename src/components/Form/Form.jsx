@@ -38,10 +38,10 @@ const Form = () => {
       </Grid>
 
       <Grid item xs={6}>
-        <TextField type="date" label="" fullWidth />
+        <TextField type="date" label="Date" fullWidth />
       </Grid>
 
-      <Button className="button" variant="outlined" color="primary" fullWidth></Button>      
+      <Button className="button" variant="outlined"  color="primary"fullWidth>Create</Button>      
     </Grid>
   );
 };
