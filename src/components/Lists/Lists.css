@@ -2,3 +2,10 @@
     max-height: 150px;
     overflow: auto;
 }
+
+.lists> .lists .avatarIncome {
+    background-color: green;
+}
+.lists> .lists .avatarExpense {
+    background-color: red;
+}

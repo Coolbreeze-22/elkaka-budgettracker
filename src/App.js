@@ -9,7 +9,7 @@ import Main from './components/Main/Main';
 function App() {
   return (
     <div>
-      <Grid container spacing={0} gap={1} justifyContent="center" alignItems="center" >
+      <Grid container spacing={0} gap={1} justifyContent="center" alignItems="flex-start" >
         <Grid items xs={12} sm={4} >
           <Details title="Income" />
         </Grid>
