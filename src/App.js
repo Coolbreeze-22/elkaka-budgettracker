@@ -5,11 +5,13 @@ import { Grid } from '@mui/material';
 import Details from './components/Details/Details';
 import Main from './components/Main/Main';
 
+import { PushToTalkButton, PushToTalkButtonContainer } from '@speechly/react-ui';
+
 
 function App() {
   return (
     <div>
-      <Grid container spacing={0} gap={1} justifyContent="center" alignItems="flex-start" >
+      <Grid container spacing={0} gap={1} justifyContent="center" alignItems="center" >
         <Grid items xs={12} sm={4} >
           <Details title="Income" />
         </Grid>
@@ -23,6 +25,12 @@ function App() {
         </Grid>
 
       </Grid>
+      
+      <PushToTalkButtonContainer>
+        <PushToTalkButton />
+        {/* <ErrorPanel /> */}
+      </PushToTalkButtonContainer>
+      
     </div>
   );
 }

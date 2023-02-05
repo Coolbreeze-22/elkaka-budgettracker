@@ -1,16 +1,15 @@
 // import React from 'react'
 
 const contextReducer = (state, action) => {
-  let transactions;
+  
 //i used "let" transactions above to create an undefined hook with transactions because i want the hook transactions to have different at different places
     switch (action.type) {
         case 'DELETE_TRANSACTION':
-            transactions = state.filter((t) => t.id !== action.payload);
-            return transactions;
+            return state.filter((t) => t.id !== action.payload);
 
         case 'ADD_TRANSACTION':
-            transactions = [action.payload, ...state];
-            return transactions;
+           state = [action.payload, ...state];
+            return state;
     
         default:
             return state;
