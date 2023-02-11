@@ -5,7 +5,9 @@ import { Grid } from '@mui/material';
 import Details from './components/Details/Details';
 import Main from './components/Main/Main';
 
-import { PushToTalkButton, PushToTalkButtonContainer } from '@speechly/react-ui';
+import { PushToTalkButton, PushToTalkButtonContainer,
+  // ErrorPanel      i removed erropanel bcos it is old fashioned
+ } from '@speechly/react-ui';
 
 
 function App() {

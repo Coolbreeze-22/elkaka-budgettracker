@@ -1,11 +1,20 @@
 .ebuka > .income {
     font-size: 10rem;
-    background-color: rgb(173, 110, 26);
     border-bottom: 10px solid green;
-color: white;
+
+    background-image: radial-gradient(circle, white, green );
+    color: white;
+
+    /* background-color: rgb(173, 110, 26); */
+    color: white;
 }
 .ebuka > .expense {
+    font-size: 10rem;
     border-bottom: 10px solid red;
-    background-color: rgb(95, 44, 143);
+
+    background-image: radial-gradient(circle, white, red );
+    color: white;
+
+    /* background-color: rgb(95, 44, 143); */
     color: white;
 }

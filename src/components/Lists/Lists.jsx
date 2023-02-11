@@ -30,7 +30,7 @@ const Lists = () => {
                     className={
                       transaction.type === "Income"
                         ? "avatarIncome"
-                        : "avatarExpense"
+                        : transaction.type === "Expense" ? "avatarExpense" : ""
                     }
                   >
                     <MoneyOff />
