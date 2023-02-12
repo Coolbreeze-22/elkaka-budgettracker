@@ -6,7 +6,7 @@ import Details from './components/Details/Details';
 import Main from './components/Main/Main';
 
 import { PushToTalkButton, PushToTalkButtonContainer,
-  // ErrorPanel      i removed erropanel bcos it is old fashioned
+  // ErrorPanel      i removed errorpanel bcos it is old fashioned
  } from '@speechly/react-ui';
 
 

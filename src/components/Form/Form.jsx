@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import { useContext } from "react";
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
@@ -7,6 +7,12 @@ import { v4 as uuidv4 } from "uuid";
 import { expenseCategories, incomeCategories } from "../../constants/categories";
 import formatDate from "../../utils/formatDate";
 import { useSpeechContext } from "@speechly/react-client";
+// i imported useCallback so i can use it to wrap the fuction of createTransaction since it is the only thing i can do so i can pass
+// createTransaction inside the dependency array of useEffect, bcos it is compulsory to pass it inside that array bcos it was used inside useEffect.
+// Note that if you stubbornly pass createTransaction inside the dependency array of useEffect without importing and setting up the
+// useCallback, ur code will keep re-rendering in the browser and the crash it. But segment and formdata that were also rendered would
+//  not keep re-rendering bcos by default they are both empty until u assign data to them, but createTransaction already contains sets o
+//  data ready to execute when summoned anytime.
 
 const initialState = {
   amount: "",
@@ -21,7 +27,7 @@ const Form = () => {
   const { segment } = useSpeechContext();
   const [ error, setError ] = useState("")
 
-  const createTransaction = () => {
+  const createTransaction = useCallback(() => {
     if (Number.isNaN(Number(formData.amount)) || !formData.date.includes("-")) return;
     if(!formData.type ) {
       setError("Please add type");
@@ -44,7 +50,8 @@ const Form = () => {
       addTransaction(transaction);
       setFormData(initialState);
     }
-    };
+    },
+    [addTransaction, formData]);
   
   useEffect(() => {
     if(segment){
@@ -100,7 +107,7 @@ const Form = () => {
     ) {
       createTransaction();
     }}
-  }, [segment]);
+  }, [segment, formData, createTransaction]);
 
   const selectedCategories =
     formData.type === "Income"
