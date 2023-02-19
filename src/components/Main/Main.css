@@ -1,8 +1,6 @@
 .main > .main {
-    /* background-color: rgb(233, 24, 24); */
-    /* color: white; */
+    border-radius: 80px;
+    border: 3px solid #ffffff;
     background-image: radial-gradient(circle,white, rgb(154, 103, 250));
-      
-    /* background-color: rgba(255, 255, 255, 0.952); */
     color: black;
 }

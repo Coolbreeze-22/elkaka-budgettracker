@@ -1,27 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, IconButton, List, ListItem, ListItemAvatar, ListItemSecondaryAction, ListItemText, Slide } from "@mui/material";
 import "./Lists.css";
 import { Delete, MoneyOff } from "@mui/icons-material";
 
 import {useContext} from "react";
 import { ExpenseTrackerContext } from "../../context/context";
+import { useEffect } from "react";
 
-
-const Lists = () => {
+const Lists = ({ setFormData }) => {
   
-  const { deleteTransaction, transactions } = useContext(ExpenseTrackerContext);
+  const { deleteTransaction, transactions, updatedId, setUpdatedId, } = useContext(ExpenseTrackerContext);
+  const [ deleteWarning, setDeleteWarning ] = useState();
 
-  // const transactions = [
-  //   { id: 1, type: "Income", category: "Salary", amount: 50, date: new Date() },
-  //   { id: 2, type: "Expense", category: "Books", amount: 50, date: new Date() },
-  //   { id: 3, type: "Income", category: "Business", amount: 150, date: new Date() },
-  // ];
+  const change = transactions.find((t) => t.id === updatedId);
+  useEffect(() => {
+  if(change) {
+    setFormData(change)
+  }
+}, [change, setFormData])
+
+// const sortTransaction = transactions.slice().sort((a, b) => b.date > a.date ? 1 : -1 );
 
   return (
     <div className="lists">
       <List dense={false} className="lists">
-        {transactions.map((transaction) => {
-          return (
+        {/* {sortTransaction.map((transaction) => ( */}
+        {transactions.slice().sort((a, b) => b.date > a.date ? 1 : -1 ).map((transaction) => (        
             <Slide direction="down" in mountOnEnter unmountOnExit key={transaction.id}
             >
               <ListItem>
@@ -40,15 +44,23 @@ const Lists = () => {
                   primary={transaction.category}
                   secondary={`$${transaction.amount} - ${transaction.date}`}
                 />
+
+                {deleteWarning !== transaction.id && <button  onClick={() => {setUpdatedId(transaction.id)} } style={{backgroundColor: "#173158", color: "white"}}>Edit</button>}
                 <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="delete" onClick={() => deleteTransaction(transaction.id)}>
+                  {deleteWarning === transaction.id &&
+                  <div style={{marginX: '10px'}}>
+                    <h5>Delete permanently</h5>
+                    <button  onClick={() => {deleteTransaction(transaction.id); setDeleteWarning() }} style={{backgroundColor:'red', color:"white", margin: '0 10px 0 25px'}}>Yes</button>
+                    <button onClick={() => setDeleteWarning()} style={{backgroundColor:'green', color:"white"}}>No</button>
+                  </div>}
+                  {deleteWarning !== transaction.id && <IconButton edge="end" aria-label="delete" onClick={() => {setDeleteWarning(transaction.id)} }>
                     <Delete />
-                  </IconButton>
+                  </IconButton>}
                 </ListItemSecondaryAction>
               </ListItem>
             </Slide>
-          );
-        })}
+          ),
+        )}
       </List>
     </div>
   );

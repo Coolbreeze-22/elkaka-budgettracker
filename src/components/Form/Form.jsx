@@ -7,14 +7,15 @@ import { v4 as uuidv4 } from "uuid";
 import { expenseCategories, incomeCategories } from "../../constants/categories";
 import formatDate from "../../utils/formatDate";
 import { useSpeechContext } from "@speechly/react-client";
-// i imported useCallback so i can use it to wrap the fuction of createTransaction since it is the only thing i can do so i can pass
+import MySnackbar from '../MySnackbar/MySnackbar';
+import Lists from "../Lists/Lists";
+
+// i imported useCallback so i can use it to wrap the function of createTransaction since it is the only thing i can do so i can pass
 // createTransaction inside the dependency array of useEffect, bcos it is compulsory to pass it inside that array bcos it was used inside useEffect.
 // Note that if you stubbornly pass createTransaction inside the dependency array of useEffect without importing and setting up the
-// useCallback, ur code will keep re-rendering in the browser and the crash it. But segment and formdata that were also rendered would
-//  not keep re-rendering bcos by default they are both empty until u assign data to them, but createTransaction already contains sets o
-//  data ready to execute when summoned anytime.
+// useCallback, ur code will keep re-rendering in the browser and then crash it. but createTransaction already contains sets of data ready to execute when summoned anytime.
 
-const initialState = {
+const initial = {
   amount: "",
   category: "",
   type: "",
@@ -22,13 +23,16 @@ const initialState = {
 };
 
 const Form = () => {
-  const [formData, setFormData] = useState(initialState);
-  const { addTransaction } = useContext(ExpenseTrackerContext);
+  const [formData, setFormData] = useState(initial); 
+  const { addTransaction, updateTransaction, updatedId, setUpdatedId } = useContext(ExpenseTrackerContext);
   const { segment } = useSpeechContext();
-  const [ error, setError ] = useState("")
+  const [ error, setError ] = useState("");
+  const [ open, setOpen ] = useState(false);
+  // console.log(formData);  
 
   const createTransaction = useCallback(() => {
-    if (Number.isNaN(Number(formData.amount)) || !formData.date.includes("-")) return;
+    // if (Number.isNaN(Number(formData.amount)) || !formData.date.includes("-")) return; this would be useful if it is possible to type in letters in the input field for number,but its not possible cos we indicated that the input field is  = Number. And for date that does not include dash(-), i.e includes slash, but it's not possible bcos date format is already there in slash/ by default, and code isnt supposed to work while dat is in slash,but its working. weird.
+
     if(!formData.type ) {
       setError("Please add type");
     }
@@ -41,18 +45,31 @@ const Form = () => {
     else if(!formData.date) {
       setError("Please add date");
     }
-    else{
+    else if(updatedId && formData.amount >= 1) {
+      const transaction = {
+        ...formData,
+        id: updatedId
+      }
+      updateTransaction(transaction);
+      setFormData(initial);
+      setUpdatedId();
+      setOpen(true);
+    }
+    else if(formData.amount >= 1 && formData.category && formData.type && formData.date){
       const transaction = {
         ...formData,
         amount: Number(formData.amount),
         id: uuidv4(),
       }
       addTransaction(transaction);
-      setFormData(initialState);
+      setFormData(initial);
+      setOpen(true);
     }
     },
-    [addTransaction, formData]);
+    [addTransaction,  updateTransaction, updatedId, setUpdatedId, formData]);
+
   
+
   useEffect(() => {
     if(segment){
     if (segment.intent.intent === "add_expense") {
@@ -61,15 +78,15 @@ const Form = () => {
     else if (segment.intent.intent === "add_income") {
       setFormData({ ...formData, type: "Income" });
     }
-     else if (
-      segment.isFinal &&
-      segment.intent.intent === "create_transaction") {
-      return createTransaction();
-    } 
+    //  else if (
+    //   segment.intent.isFinal &&
+    //   segment.intent.intent === "create_transaction") {
+    //   return createTransaction();
+    // } 
     else if (
-      segment.isFinal &&
+      segment.intent.isFinal &&
       segment.intent.intent === "cancel_transaction") {
-      return setFormData(initialState);
+      return setFormData(initial);
     }
     segment.entities.forEach((e) => {
       const category = `${e.value.charAt(0)}${e.value.slice(1).toLowerCase()}`;
@@ -98,16 +115,17 @@ const Form = () => {
       }
     });
 
-    if (
-      // segment.isFinal &&
-      // formData.amount &&
-      // formData.category &&
-      // formData.type &&
-      formData.date
-    ) {
-      createTransaction();
-    }}
-  }, [segment, formData, createTransaction]);
+    // if (
+    //   segment.intent.isFinal &&
+    //   formData.amount &&
+    //   formData.category &&
+    //   formData.type &&
+    //   formData.date
+    // ) {
+    //   createTransaction();
+    // }
+  }
+  }, [segment]);
 
   const selectedCategories =
     formData.type === "Income"
@@ -129,21 +147,19 @@ const Form = () => {
 // value={formData.category} down around line 160 down.
 // ohh
 // note again.. i decided not to use handleChange for this project bcos it will necessitate that i abandone const initial state and change my "usestate"
-// to usesate({}) instead of usestate(initialState). this is bcos when i create transactions, it does return the formdata to initialstate, and i intended
+// to usestate({}) instead of usestate(initialState). this is bcos when i create transactions, it does return the formdata to initialstate, and i intended
 // to use two different methods here, of which one needs const initialstate while the other doesnt need it and instead needs usestate({}) instead of usestate(inialstate)
  
 return (
+  <div className="form">
     <Grid container spacing={2}>
+
+      <MySnackbar open={open} setOpen={setOpen} />
+
       <Grid item xs={12}>
         <Typography align="center" variant="subtitle2" gutterBottom>
-          ...
           {segment && <> {segment.words.map((w) => w.value).join(" ")} </>}
-          {/* {segment ? (
-            <>
-            {segment.words.map((w) => w.value).join(" ")}
-            </>
-          ) : null } */}
-        </Typography>
+          </Typography>
       </Grid>
 
       <Grid item xs={6}>
@@ -186,7 +202,7 @@ return (
           fullWidth
           value={formData.amount}
             onChange={(e) =>
-              setFormData({ ...formData, amount: e.target.value}, setError(""))
+              {setFormData({ ...formData, amount: e.target.value}, setError("")) }
             }
         />
       </Grid>
@@ -205,11 +221,21 @@ return (
       <Grid item xs={12} align="center" alignItems="center" sx={{paddingBottom:"5px", color:"red"}}>
           {error}
         </Grid>
+      
+      </Grid>
+        <Button className="button" sx={{backgroundColor: '#173158'}} variant="outlined" color="primary" fullWidth onClick={createTransaction}>
+          Create
+        </Button>
+        <div style={{ textAlign: "center", marginTop: '10px' }}>
+          <button style={{ backgroundColor: "#5c0202", color: "white" }}  onClick={() => {setFormData(initial); setUpdatedId(); setError()} }>Clear</button>
+        </div>
 
-      <Button className="button" variant="outlined" color="primary" fullWidth onClick={createTransaction}>
-        Create
-      </Button>
-    </Grid>
+        <Grid container >
+          <Grid item xs={12}>
+            <Lists setFormData={setFormData} />
+          </Grid>
+        </Grid>
+      </div>
   );
 };
 

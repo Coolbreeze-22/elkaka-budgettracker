@@ -11,10 +11,14 @@ switch (action.type) {
             return state;
         
         case 'ADD_TRANSACTION':
-            state = [action.payload, ...state];
+            state = [ ...state, action.payload];
             localStorage.setItem('state', JSON.stringify(state));
             return state;
-    
+
+            case 'UPDATE_TRANSACTION':
+            localStorage.setItem('state', JSON.stringify(state.map((t) => t.id === action.payload.id ? action.payload : t)));
+            return state.map((t) => t.id === action.payload.id ? action.payload : t);
+
         default:
             return state;
     }
