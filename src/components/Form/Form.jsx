@@ -79,6 +79,7 @@ const Form = () => {
       addTransaction(transaction);
       setFormData(initial);
       setOpen(true);
+      setMyVoice();
     }
   }, [addTransaction, updateTransaction, updatedId, setUpdatedId, formData]);
 
@@ -263,6 +264,7 @@ const Form = () => {
             setFormData(initial);
             setUpdatedId();
             setError();
+            setMyVoice()
           }}
         >
           Clear
