@@ -4,7 +4,7 @@ import { Card, CardHeader, CardContent, Typography } from "@mui/material";
 import { Chart, Tooltip, Title, ArcElement, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
 import { Pie } from "react-chartjs-2";
-// just incase you want to use pie instaed of doughnut or both
+// just incase you want to use pie instedd of doughnut or both
 import useTransactions from "../../useTransactions";
 
 Chart.register(Tooltip, Title, ArcElement, Legend);

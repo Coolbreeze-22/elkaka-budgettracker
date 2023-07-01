@@ -14,23 +14,25 @@ import { useSpeechContext,
 
 
 
-function App() {
-  // the following codes below for const {speechstate} is added so when ever user begins to use speechly, user will be pushed to the Main so user can see what user is saying
-  // note: the code has refused to work probably because SpeechState is deprecated, just like errorpanel. i.e problem could be from speechState or SpeechState.
-  // But useRef algorithm should be correct. So to narrow down the problem, it should be around speechState === SpeechState.Recording.
-  
-  const { speechState } = useSpeechContext();
+function App() {  
+  const { listening, attachMicrophone, start, stop } = useSpeechContext();
   const main = useRef(null);
-  const executeScroll = () => main.current.scrollIntoView();
+  const handleScroll = () => main.current.scrollIntoView();
 
   useEffect(() => {
-    // if(speechState === SpeechState.Recording) {this is the right code to use,but it throws the screen blank, so i'm using the below as a placeholder so i can continue my coding}
-    if(speechState) {
-      executeScroll();
+    if (listening) {
+      handleScroll()
     }
-  
-    
-  }, [speechState]);
+  }, [listening]);
+
+  const handleClick = async () => {
+    if (listening) {
+      await stop();
+    } else {
+      await attachMicrophone();
+      await start();
+    }
+  };
   
   return (
     <div>
@@ -48,13 +50,14 @@ function App() {
         </Grid>
 
       </Grid>
-      
+  
       <PushToTalkButtonContainer>
-        <PushToTalkButton />
-        {/* <ErrorPanel /> */}
+        <PushToTalkButton onClick={handleClick} />
       </PushToTalkButtonContainer>
-      
-    </div>
+      <PushToTalkButtonContainer>
+        <div style={{color: "blue"}}>{listening ? 'Stop' : 'Start'}</div>
+      </PushToTalkButtonContainer>
+      </div>
   );
 }
 
